@@ -93,7 +93,7 @@ In this latest version, the following updates have been made:
 
 Total number of algorithms: 50+
 ***
-***
+
 # Areas of Research
 
 ### Geospatial & Spatiotemporal Data Analysis and Visualization
