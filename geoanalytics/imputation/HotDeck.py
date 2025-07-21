@@ -1,3 +1,27 @@
+# HotDeck-based missing value imputation for multidimensional data with runtime and memory tracking,
+# and support for saving the imputed dataset.
+#
+# **Importing and Using the HotDeck Class in a Python Program**
+#
+#             import pandas as pd
+#
+#             from geoanalytics.imputation import HotDeck
+#
+#             df = pd.read_csv('input.csv')
+#
+#             imputer = HotDeck(df)
+#
+#             imputed_df = imputer.run()
+#
+#             imputer.getRuntime()
+#
+#             imputer.getMemoryUSS()
+#
+#             imputer.getMemoryRSS()
+#
+#             imputer.save('HotDeck.csv')
+#
+
 __copyright__ = """
 Copyright (C)  2022 Rage Uday Kiran
 
@@ -21,6 +45,51 @@ from tqdm import tqdm
 import pandas as pd
 
 class HotDeck:
+    """
+    **About this algorithm**
+
+    :**Description**:
+        Hot Deck Imputation is a simple, non-parametric method for handling missing values by
+        replacing each missing entry with a randomly selected observed value from the same column.
+        This method is suitable for datasets where missing values are not patterned or large in volume.
+
+    :**Parameters**:
+        - Dataset (pandas DataFrame) must be provided during object initialization.
+
+    :**Attributes**:
+        - **df** (*pd.DataFrame*) -- The input data with 'x', 'y' coordinates and features.
+        - **imputedDF** (*pd.DataFrame*) -- DataFrame after filling in missing values.
+        - **startTime, endTime** (*float*) -- Variables to track execution time.
+        - **memoryUSS, memoryRSS** (*float*) -- Memory usage of the imputation process in kilobytes.
+
+    **Execution methods**
+
+    **Calling from a Python program**
+
+    .. code-block:: python
+
+            import pandas as pd
+
+            from geoanalytics.imputation import HotDeck
+
+            df = pd.read_csv("input.csv")
+
+            imputer = HotDeck(df)
+
+            imputed_df = imputer.run()
+
+            imputer.getRuntime()
+            imputer.getMemoryUSS()
+            imputer.getMemoryRSS()
+
+            imputer.save('HotDeck.csv')
+
+    **Credits**
+
+    This implementation was created by Raashika and revised by M.Charan Teja
+    under the guidance of Professor Rage Uday Kiran.
+    """
+
     def __init__(self, dataframe):
         self.df = dataframe.copy()
         self.df.columns = ['x', 'y'] + list(self.df.columns[2:])
@@ -50,6 +119,12 @@ class HotDeck:
 
 
     def run(self):
+        """
+        Executes the Hot Deck Imputation algorithm by replacing missing values with randomly
+        selected non-missing values from the same column.
+
+        :return: imputedDF (pd.DataFrame) -- DataFrame with missing values filled
+        """
         self.startTime = time.time()
         xy = self.df[['x', 'y']].reset_index(drop=True)
         data = self.df.drop(['x', 'y'], axis=1).reset_index(drop=True)
@@ -74,6 +149,11 @@ class HotDeck:
 
 
     def save(self, outputFile='HotDeck.csv'):
+        """
+        Saves the imputed DataFrame to a CSV file.
+
+        :param outputFile: str, filename to save the imputed data (default: 'HotDeck.csv')
+        """
         if self.imputedDF is not None:
             try:
                 self.imputedDF.to_csv(outputFile, index=False)

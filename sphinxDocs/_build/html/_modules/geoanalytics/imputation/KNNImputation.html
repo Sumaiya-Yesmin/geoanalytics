@@ -88,7 +88,30 @@
            <div itemprop="articleBody">
              
   <h1>Source code for geoanalytics.imputation.KNNImputation</h1><div class="highlight"><pre>
-<span></span><span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span></span><span class="c1"># K-Nearest Neighbors (KNN)-based missing value imputation for multidimensional data with runtime and memory tracking,</span>
+<span class="c1"># and support for saving the imputed dataset.</span>
+<span class="c1">#</span>
+<span class="c1"># **Importing and Using the KNNImputation Class in a Python Program**</span>
+<span class="c1">#</span>
+<span class="c1">#             import pandas as pd</span>
+<span class="c1">#</span>
+<span class="c1">#             from geoanalytics.imputation import KNNImputation</span>
+<span class="c1">#</span>
+<span class="c1">#             df = pd.read_csv(&#39;input.csv&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#             knn_imputer = KNNImputation(df)</span>
+<span class="c1">#</span>
+<span class="c1">#             imputed_df = knn_imputer.run(n_neighbors=5)</span>
+<span class="c1">#</span>
+<span class="c1">#             knn_imputer.getRuntime()</span>
+<span class="c1">#</span>
+<span class="c1">#             knn_imputer.getMemoryUSS()</span>
+<span class="c1">#</span>
+<span class="c1">#             knn_imputer.getMemoryRSS()</span>
+<span class="c1">#</span>
+<span class="c1">#             knn_imputer.save(&#39;KNN.csv&#39;)</span>
+<span class="c1">#</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">Copyright (C)  2022 Rage Uday Kiran</span>
 
 <span class="s2">     This program is free software: you can redistribute it and/or modify</span>
@@ -112,6 +135,51 @@
 <span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="kn">import</span> <span class="n">KNNImputer</span>
 
 <div class="viewcode-block" id="KNNImputation"><a class="viewcode-back" href="../../../geoanalytics.imputation.html#geoanalytics.imputation.KNNImputation.KNNImputation">[docs]</a><span class="k">class</span> <span class="nc">KNNImputation</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    **About this algorithm**</span>
+
+<span class="sd">    :**Description**:</span>
+<span class="sd">        K-Nearest Neighbors (KNN) Imputation estimates missing values by finding the `k` nearest samples</span>
+<span class="sd">        (rows) in the dataset and imputing missing values based on the average (or weighted average) of</span>
+<span class="sd">        those neighbors&#39; corresponding feature values.</span>
+
+<span class="sd">    :**Parameters**:</span>
+<span class="sd">        - Dataset (pandas DataFrame) must be provided during object initialization.</span>
+<span class="sd">        - Number of neighbors `n_neighbors` is specified during the `run()` call.</span>
+
+<span class="sd">    :**Attributes**:</span>
+<span class="sd">        - **df** (*pd.DataFrame*) -- The input data with &#39;x&#39;, &#39;y&#39; coordinates and features.</span>
+<span class="sd">        - **imputedDF** (*pd.DataFrame*) -- DataFrame after filling in missing values.</span>
+<span class="sd">        - **startTime, endTime** (*float*) -- Variables to track execution time.</span>
+<span class="sd">        - **memoryUSS, memoryRSS** (*float*) -- Memory usage of the imputation process in kilobytes.</span>
+
+<span class="sd">    **Execution methods**</span>
+
+<span class="sd">    **Calling from a Python program**</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">            import pandas as pd</span>
+
+<span class="sd">            from geoanalytics.imputation import KNNImputation</span>
+
+<span class="sd">            df = pd.read_csv(&quot;input.csv&quot;)</span>
+
+<span class="sd">            knn_imputer = KNNImputation(df)</span>
+
+<span class="sd">            imputed_df = knn_imputer.run(n_neighbors=5)</span>
+
+<span class="sd">            knn_imputer.getRuntime()</span>
+<span class="sd">            knn_imputer.getMemoryUSS()</span>
+<span class="sd">            knn_imputer.getMemoryRSS()</span>
+
+<span class="sd">            knn_imputer.save(&#39;KNN.csv&#39;)</span>
+
+<span class="sd">    **Credits**</span>
+
+<span class="sd">    This implementation was created by Raashika and revised by M.Charan Teja</span>
+<span class="sd">    under the guidance of Professor Rage Uday Kiran.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataframe</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
@@ -141,6 +209,12 @@
 
 
 <div class="viewcode-block" id="KNNImputation.run"><a class="viewcode-back" href="../../../geoanalytics.imputation.html#geoanalytics.imputation.KNNImputation.KNNImputation.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Executes the KNN Imputation algorithm by replacing missing values based on nearest neighbor averages.</span>
+
+<span class="sd">        :param n_neighbors: int, number of neighbors to use for imputation (default: 5)</span>
+<span class="sd">        :return: imputedDF (pd.DataFrame) -- DataFrame with missing values filled</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">xy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -158,6 +232,11 @@
 
 
 <div class="viewcode-block" id="KNNImputation.save"><a class="viewcode-back" href="../../../geoanalytics.imputation.html#geoanalytics.imputation.KNNImputation.KNNImputation.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputFile</span><span class="o">=</span><span class="s1">&#39;KNN.csv&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Saves the imputed DataFrame to a CSV file.</span>
+
+<span class="sd">        :param outputFile: str, filename to save the imputed data (default: &#39;KNN.csv&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">imputedDF</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">imputedDF</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">outputFile</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>

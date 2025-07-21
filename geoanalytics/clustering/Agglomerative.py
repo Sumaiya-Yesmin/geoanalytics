@@ -1,3 +1,27 @@
+# Agglomerative-based clustering algorithm using scikit-learn to assign cluster labels
+# to multidimensional data with runtime and memory tracking, and support for saving results.
+#
+# **Importing and Using the Agglomerative Class in a Python Program**
+#
+#             import pandas as pd
+#
+#             from geoanalytics.clustering import Agglomerative
+#
+#             df = pd.read_csv('input.csv')
+#
+#             ag = Agglomerative(df)
+#
+#             labels_df = ag.run(n_clusters=4)
+#
+#             ag.getRuntime()
+#
+#             ag.getMemoryUSS()
+#
+#             ag.getMemoryRSS()
+#
+#             ag.save('AgglomerativeLabels.csv')
+#
+
 __copyright__ = """
 Copyright (C)  2022 Rage Uday Kiran
 
@@ -25,7 +49,58 @@ import pandas as pd
 
 
 class Agglomerative:
+    """
+    **About this algorithm**
+
+    :**Description**:
+        Agglomerative Clustering is a hierarchical clustering technique that recursively merges
+        the closest pairs of clusters. This wrapper applies agglomerative clustering on feature-rich
+        multidimensional data and supports runtime and memory usage tracking, along with label export.
+
+    :**Parameters**:
+        - Dataset (pandas DataFrame) must be provided during object initialization.
+        - Clustering parameters can be passed to the run method.
+
+    :**Attributes**:
+        - **df** (*pd.DataFrame*) -- The input data with 'x', 'y' coordinates and features.
+        - **labelsDF** (*pd.DataFrame*) -- DataFrame containing 'x', 'y', and assigned cluster labels.
+        - **startTime, endTime** (*float*) -- Variables to track clustering execution time.
+        - **memoryUSS, memoryRSS** (*float*) -- Memory usage of the clustering process in kilobytes.
+
+    **Execution methods**
+
+    **Calling from a Python program**
+
+    .. code-block:: python
+
+            import pandas as pd
+
+            from geoanalytics.clustering import Agglomerative
+
+            df = pd.read_csv("input.csv")
+
+            ag = Agglomerative(df)
+
+            labels_df = ag.run(n_clusters=4)
+
+            ag.getRuntime()
+            ag.getMemoryUSS()
+            ag.getMemoryRSS()
+
+            ag.save('AgglomerativeLabels.csv')
+
+    **Credits**
+
+    This implementation was created by Raashika and revised by M.Charan Teja under the guidance of Professor Rage Uday Kiran.
+    """
+
     def __init__(self, dataframe):
+        """
+        Constructor: Initializes the Agglomerative clustering wrapper with input DataFrame.
+
+        :param dataframe: pd.DataFrame with 'x', 'y' and other feature columns
+        """
+
         self.df = dataframe.copy()
         self.df.columns = ['x', 'y'] + list(self.df.columns[2:])
         self.labelsDF = None
@@ -53,6 +128,13 @@ class Agglomerative:
         print("Memory (RSS) of proposed Algorithm in KB:", self.memoryRSS)
 
     def run(self, n_clusters=4):
+        """
+        Executes Agglomerative Clustering algorithm.
+
+        :param n_clusters: int, number of clusters to form (default: 4)
+
+        :return: labelsDF (pd.DataFrame) with columns ['x', 'y', 'labels']
+        """
         self.startTime = time.time()
         data = self.df.drop(['x', 'y'], axis=1)
         data = data.to_numpy()
@@ -69,6 +151,11 @@ class Agglomerative:
         return self.labelsDF
 
     def save(self, outputFileLabels='AgglomerativeLabels.csv'):
+        """
+        Saves the clustering result with labels to a CSV file.
+
+        :param outputFileLabels: str, filename for saving labels (default: 'AgglomerativeLabels.csv')
+        """
         if self.labelsDF is not None:
             try:
                 self.labelsDF.to_csv(outputFileLabels, index=False)

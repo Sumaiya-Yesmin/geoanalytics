@@ -88,7 +88,30 @@
            <div itemprop="articleBody">
              
   <h1>Source code for geoanalytics.imputation.NumberImputation</h1><div class="highlight"><pre>
-<span></span><span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span></span><span class="c1"># Number-based missing value imputation for multidimensional data with runtime and memory tracking,</span>
+<span class="c1"># and support for saving the imputed dataset.</span>
+<span class="c1">#</span>
+<span class="c1"># **Importing and Using the NumberImputation Class in a Python Program**</span>
+<span class="c1">#</span>
+<span class="c1">#             import pandas as pd</span>
+<span class="c1">#</span>
+<span class="c1">#             from geoanalytics.imputation import NumberImputation</span>
+<span class="c1">#</span>
+<span class="c1">#             df = pd.read_csv(&#39;input.csv&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#             number_imputer = NumberImputation(df)</span>
+<span class="c1">#</span>
+<span class="c1">#             imputed_df = number_imputer.run(number=0)</span>
+<span class="c1">#</span>
+<span class="c1">#             number_imputer.getRuntime()</span>
+<span class="c1">#</span>
+<span class="c1">#             number_imputer.getMemoryUSS()</span>
+<span class="c1">#</span>
+<span class="c1">#             number_imputer.getMemoryRSS()</span>
+<span class="c1">#</span>
+<span class="c1">#             number_imputer.save(&#39;NumberImputation.csv&#39;)</span>
+<span class="c1">#</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">Copyright (C)  2022 Rage Uday Kiran</span>
 
 <span class="s2">     This program is free software: you can redistribute it and/or modify</span>
@@ -111,6 +134,52 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <div class="viewcode-block" id="NumberImputation"><a class="viewcode-back" href="../../../geoanalytics.imputation.html#geoanalytics.imputation.NumberImputation.NumberImputation">[docs]</a><span class="k">class</span> <span class="nc">NumberImputation</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    **About this algorithm**</span>
+
+<span class="sd">    :**Description**:</span>
+<span class="sd">        Number Imputation replaces missing values in the dataset with a specified fixed numeric value.</span>
+<span class="sd">        This is a straightforward method useful when you want to impute all missing values with a constant number,</span>
+<span class="sd">        such as zero or any other specified numeric value.</span>
+
+<span class="sd">    :**Parameters**:</span>
+<span class="sd">        - Dataset (pandas DataFrame) must be provided during object initialization.</span>
+<span class="sd">        - `number` (int or float) to replace missing values during the `run()` method (default is 0).</span>
+
+<span class="sd">    :**Attributes**:</span>
+<span class="sd">        - **df** (*pd.DataFrame*) -- The input data with &#39;x&#39;, &#39;y&#39; coordinates and features.</span>
+<span class="sd">        - **imputedDF** (*pd.DataFrame*) -- DataFrame after filling in missing values with the specified number.</span>
+<span class="sd">        - **startTime, endTime** (*float*) -- Variables to track execution time.</span>
+<span class="sd">        - **memoryUSS, memoryRSS** (*float*) -- Memory usage of the imputation process in kilobytes.</span>
+
+<span class="sd">    **Execution methods**</span>
+
+<span class="sd">    **Calling from a Python program**</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">            import pandas as pd</span>
+
+<span class="sd">            from geoanalytics.imputation import NumberImputation</span>
+
+<span class="sd">            df = pd.read_csv(&quot;input.csv&quot;)</span>
+
+<span class="sd">            number_imputer = NumberImputation(df)</span>
+
+<span class="sd">            imputed_df = number_imputer.run(number=0)</span>
+
+<span class="sd">            number_imputer.getRuntime()</span>
+<span class="sd">            number_imputer.getMemoryUSS()</span>
+<span class="sd">            number_imputer.getMemoryRSS()</span>
+
+<span class="sd">            number_imputer.save(&#39;NumberImputation.csv&#39;)</span>
+
+<span class="sd">    **Credits**</span>
+
+<span class="sd">    This implementation was created by Raashika and revised by M.Charan Teja</span>
+<span class="sd">    under the guidance of Professor Rage Uday Kiran.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataframe</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
@@ -140,6 +209,12 @@
 
 
 <div class="viewcode-block" id="NumberImputation.run"><a class="viewcode-back" href="../../../geoanalytics.imputation.html#geoanalytics.imputation.NumberImputation.NumberImputation.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Executes the number imputation algorithm by filling missing values with the specified number.</span>
+
+<span class="sd">        :param number: int or float, the numeric value to fill missing data (default 0)</span>
+<span class="sd">        :return: imputedDF (pd.DataFrame) -- DataFrame with missing values filled</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">xy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -156,6 +231,11 @@
 
 
 <div class="viewcode-block" id="NumberImputation.save"><a class="viewcode-back" href="../../../geoanalytics.imputation.html#geoanalytics.imputation.NumberImputation.NumberImputation.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputFile</span><span class="o">=</span><span class="s1">&#39;NumberImputation.csv&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Saves the imputed DataFrame to a CSV file.</span>
+
+<span class="sd">        :param outputFile: str, filename to save the imputed data (default: &#39;NumberImputation.csv&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">imputedDF</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">imputedDF</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">outputFile</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>

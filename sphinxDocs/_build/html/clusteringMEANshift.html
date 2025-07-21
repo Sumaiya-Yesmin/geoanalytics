@@ -110,6 +110,52 @@
 <dt class="sig sig-object py" id="geoanalytics.clustering.MEANshift.MEANshift">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoanalytics.clustering.MEANshift.</span></span><span class="sig-name descname"><span class="pre">MEANshift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geoanalytics/clustering/MEANshift.html#MEANshift"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoanalytics.clustering.MEANshift.MEANshift" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p><strong>About this algorithm</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">Description<span class="colon">:</span></dt>
+<dd class="field-odd"><p>MeanShift is a centroid-based clustering algorithm that seeks modes (i.e., high-density
+areas) in the feature space. It does not require predefining the number of clusters. This
+wrapper performs MeanShift clustering on input data, tracks memory and execution time, and
+supports exporting results.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p>Dataset (pandas DataFrame) must be provided during object initialization.</p></li>
+<li><p>Clustering hyperparameters can be passed to the run method.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – The input data with ‘x’, ‘y’ coordinates and features.</p></li>
+<li><p><strong>labelsDF</strong> (<em>pd.DataFrame</em>) – DataFrame containing ‘x’, ‘y’, and assigned cluster labels.</p></li>
+<li><p><strong>centers</strong> (<em>ndarray</em>) – The cluster centers estimated by MeanShift.</p></li>
+<li><p><strong>startTime, endTime</strong> (<em>float</em>) – Variables to track clustering execution time.</p></li>
+<li><p><strong>memoryUSS, memoryRSS</strong> (<em>float</em>) – Memory usage of the clustering process in kilobytes.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Execution methods</strong></p>
+<p><strong>Calling from a Python program</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">geoanalytics.clustering</span> <span class="kn">import</span> <span class="n">MEANshift</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;input.csv&quot;</span><span class="p">)</span>
+
+<span class="n">ms</span> <span class="o">=</span> <span class="n">MEANshift</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="n">labels_df</span><span class="p">,</span> <span class="n">centers</span> <span class="o">=</span> <span class="n">ms</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">bandwidth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+
+<span class="n">ms</span><span class="o">.</span><span class="n">getRuntime</span><span class="p">()</span>
+<span class="n">ms</span><span class="o">.</span><span class="n">getMemoryUSS</span><span class="p">()</span>
+<span class="n">ms</span><span class="o">.</span><span class="n">getMemoryRSS</span><span class="p">()</span>
+
+<span class="n">ms</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;MeanShiftLabels.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;MeanShiftCenters.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Credits</strong></p>
+<p>This implementation was created by Raashika and revised by M.Charan Teja
+under the guidance of Professor Rage Uday Kiran.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="geoanalytics.clustering.MEANshift.MEANshift.getMemoryRSS">
 <span class="sig-name descname"><span class="pre">getMemoryRSS</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/geoanalytics/clustering/MEANshift.html#MEANshift.getMemoryRSS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoanalytics.clustering.MEANshift.MEANshift.getMemoryRSS" title="Permalink to this definition"></a></dt>
@@ -131,12 +177,35 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="geoanalytics.clustering.MEANshift.MEANshift.run">
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bandwidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geoanalytics/clustering/MEANshift.html#MEANshift.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoanalytics.clustering.MEANshift.MEANshift.run" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Executes MeanShift clustering algorithm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bandwidth</strong> – float or None, bandwidth for window size. If None, it will be estimated automatically.</p></li>
+<li><p><strong>max_iter</strong> – int, maximum number of iterations (default: 300)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(labelsDF, centers)
+labelsDF (pd.DataFrame) – DataFrame with ‘x’, ‘y’, and cluster labels
+centers (np.ndarray) – Coordinates of cluster centers</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="geoanalytics.clustering.MEANshift.MEANshift.save">
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputFileLabels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MeanShiftLabels.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputFileCenters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MeanShiftCenters.csv'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geoanalytics/clustering/MEANshift.html#MEANshift.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoanalytics.clustering.MEANshift.MEANshift.save" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Saves the clustering result and cluster centers to CSV files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>outputFileLabels</strong> – str, filename to save label results (default: ‘MeanShiftLabels.csv’)</p></li>
+<li><p><strong>outputFileCenters</strong> – str, filename to save cluster centers (default: ‘MeanShiftCenters.csv’)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
