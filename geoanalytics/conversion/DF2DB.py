@@ -56,18 +56,25 @@ class DF2DB:
 
         :param inputDF: DataFrame :
              It is sparse or dense DataFrame
+
         :param thresholdValue: int or float :
              It is threshold value of all item
+
         :param condition: str :
              It is condition of all item
+
         :param DFtype: str :
              It is DataFrame type. It should be sparse or dense. Default DF is sparse.
+
         :param memoryUSS : float
             To store the total amount of USS memory consumed by the program
+
         :param memoryRSS : float
             To store the total amount of RSS memory consumed by the program
+
         :param startTime : float
             To record the start time of the mining process
+
         endTime : float
             To record the completion time of the mining process
 
@@ -112,8 +119,10 @@ class DF2DB:
 
         :param oFile: file name or path to store database
         :type oFile: str
+
         :param condition: It is condition to judge the value
         :type condition: str
+
         :param thresholdValue: user defined threshold value
         :type thresholdValue: int or float
         """
@@ -145,8 +154,10 @@ class DF2DB:
 
         :param oFile: file name or path to store database
         :type oFile: str
+
         :param condition: It is condition to judge the value
         :type condition: str
+
         :param thresholdValue: user defined threshold value
         :type thresholdValue: int or float
         """
@@ -204,10 +215,13 @@ class DF2DB:
 
         :param oFile: file name or path to store database
         :type oFile: str
+
         :param condition: It is condition to judge the value
         :type condition: str
+
         :param thresholdValue: user defined threshold value
         :type thresholdValue: int or float
+
         :rtype: str
         """
         self._startTime = time.time()
@@ -239,10 +253,13 @@ class DF2DB:
 
         :param oFile: file name or path to store database
         :type oFile: str
+
         :param condition: It is condition to judge the value
         :type condition: str
+
         :param thresholdValue: user defined threshold value
         :type thresholdValue: int or float
+
         :rtype: str
         """
         self._startTime = time.time()
@@ -277,9 +294,12 @@ class DF2DB:
 
         :param oFile:  Write multiple time series database into outputFile.
         :type oFile:  str
+
         :param interval: Breaks the given timeseries into intervals.
         :type interval: int
+
         :param condition: It is condition to judge the value in dataframe
+
         :param thresholdValue: User defined value.
         :type thresholdValue: int or float
         """

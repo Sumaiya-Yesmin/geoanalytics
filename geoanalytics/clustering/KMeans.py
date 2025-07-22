@@ -1,22 +1,24 @@
-# K-means is a popular and efficient clustering algorithm that partitions data into K distinct groups by iteratively minimizing the distance between data points and their assigned cluster centroids.
-
-# **Importing this algorithm into a Python program**
+# KMeans enhances KMeans by improving initialization for better convergence and cluster quality, with added utilities for memory tracking, runtime reporting, and Elbow Method plotting on 2D-location DataFrame inputs.
 #
-#           from geoanalytics.clustering import KMeans as alg
+# **Importing and Using this KMeans Wrapper in a Python Program**
 #
-#           import pandas as pd
+#             import pandas as pd
 #
-#           df = pd.read_csv('dataset.csv')
+#             from goeAnalytics.clustering import KMeans
 #
-#           obj = alg.KMeans(df)
+#             df = pd.read_csv('data.csv')
 #
-#           obj.elbowMethod()
+#             obj = KMeans(df)
 #
-#           labels, centers = obj.clustering(k=3)
+#             obj.elbowMethod()
 #
-#           print("Clustered Data with Labels:\n", labels)
+#             output = obj.clustering(k=3)
 #
-#           print("Cluster Centers:\n", centers)
+#             labelsDF = output[0]
+#
+#             clusterCenters = output[1]
+#
+#             obj.save(outputFile='KMeansLabels.csv')
 #
 
 
@@ -48,50 +50,53 @@ import pandas as pd
 
 class KMeans:
     """
-    **About this algorithm**
+        **About this algorithm**
 
-    :**Description**:   KMeans clusters data into k groups using scikit-learn's algorithm, excluding 'x' and 'y' spatial columns. It supports elbow plot visualization, and tracks runtime and memory usage.
+        :**Description**: K-Means clustering by using smarter centroid initialization for better stability and faster convergence, applied here to high-dimensional data excluding x, y coordinates.
 
-    :**Parameters**:    - **dataframe** (*pandas.DataFrame*) -- *Input dataset with 'x', 'y' spatial columns and other features.*
-                        - **k** (*int*) -- *Number of clusters for the algorithm.*
-                        - **max_iter** (*int*) -- *Maximum number of iterations for convergence.*
-                        - **sep** (*str*) -- *Separator (default is tab-space if reading from file, not used in this context).*
+        :**Parameters**:    - **dataframe** (*pd.DataFrame*) -- A Pandas DataFrame that contains the input dataset.
+                            - The first two columns must be spatial or positional features (e.g., 'x' and 'y').
+                            - All other columns are treated as feature vectors for clustering.
 
-    :**Attributes**:    - **df** (*pandas.DataFrame*) -- *Internal copy of the input DataFrame with column order ['x', 'y', features...].*
-                        - **memory_kb** (*float*) -- *Memory used in kilobytes (USS) during clustering.*
-                        - **runtime_sec** (*float*) -- *Runtime duration of clustering in seconds.*
+        :**Attributes**:    - **df** (*pd.DataFrame*) -- Stores the copy of the input dataset, renaming first two columns to 'x' and 'y'.
+                            - **start_time** (*float*) -- Records the clustering start time for runtime analysis.
+                            - **memory_uss_kb** (*float*) -- Measures USS memory usage in kilobytes after execution.
+                            - **memory_rss_kb** (*float*) -- Measures RSS memory usage in kilobytes after execution.
+                            - **labels** (*pd.DataFrame*) -- Final dataframe containing 'x', 'y', and cluster label for each instance.
+                            - **cluster_centers_** (*np.ndarray*) -- Coordinates of the final cluster centroids after fitting.
 
-    **Execution methods**
+        **Execution methods**
 
-    **Calling from a Python program**
+        **Calling from a Python program**
 
-    .. code-block:: python
+        .. code-block:: python
 
-            from geoanalytics.clustering import KMeans as alg
+                import pandas as pd
 
-            import pandas as pd
+                from goeAnalytics.clustering import KMeans
 
-            df = pd.read_csv('dataset.csv')
+                df = pd.read_csv('data.csv')
 
-            obj = alg.KMeans(df)
+                obj = KMeans(df)
 
-            obj.elbowMethod()
+                obj.elbowMethod()
 
-            labels, centers = obj.clustering(k=3)
+                output = obj.clustering(k=3)
 
-            print("Clustered Data with Labels:\n", labels)
+                labelsDF = output[0]
 
-            print("Cluster Centers:\n", centers)
+                clusterCenters = output[1]
 
-    **Credits**
+                obj.save(outputFile='KMeansLabels.csv')
 
-    The complete program was written by               and revised by              under the supervision of Professor Rage Uday Kiran.
+        **Credits**
+
+        The complete program was written by Raashika and revised by M.Charan Teja under the supervision of Professor Rage Uday Kiran.
+
     """
     def __init__(self, dataframe):
         """
-
-        Initializes the KMeans object by standardizing the column order and copying the dataframe.
-
+        Constructor to initialize the KMeans object with the given dataframe.
         """
         self.df = dataframe.copy()
         self.df.columns = ['x', 'y'] + list(self.df.columns[2:])
@@ -104,35 +109,26 @@ class KMeans:
 
     def getRuntime(self):
         """
-
-        Computes and prints the runtime and USS memory used by the process.
-
+        Prints the total runtime of the clustering algorithm.
         """
         print("Total Execution time of proposed Algorithm:", self.endTime - self.startTime, "seconds")
 
     def getMemoryUSS(self):
         """
-
         Prints the memory usage (USS) of the process in kilobytes.
-
         """
         print("Memory (USS) of proposed Algorithm in KB:", self.memoryUSS)
 
     def getMemoryRSS(self):
         """
-
         Prints the memory usage (RSS) of the process in kilobytes.
-
         """
         print("Memory (RSS) of proposed Algorithm in KB:", self.memoryRSS)
 
     def elbowMethod(self):
         """
-
-        Plots the elbow graph to help determine the optimal number of clusters (k).
-
-        Uses WCSS (Within-Cluster Sum of Squares) and excludes 'x', 'y' from the computation.
-
+        Applies the elbow method to help decide the optimal number of clusters (k).
+        It plots WCSS (within-cluster sum of squares) for k in range 1 to 10.
         """
         wcss = []
         k_values = range(1, 11)
@@ -150,17 +146,11 @@ class KMeans:
 
     def run(self, k = 4, max_iter=100):
         """
+        Runs KMeans clustering on the input dataset using scikit-learn.
 
-        Applies KMeans clustering to the dataset, excluding 'x' and 'y', and returns labeled data and cluster centers.
-
-        Returns:
-
-        labels : pandas.DataFrame
-            DataFrame containing 'x', 'y', and the predicted cluster labels.
-
-        centers : numpy.ndarray
-            Array of shape (k, n_features) representing the coordinates of cluster centers.
-
+        :param k: Number of clusters to form.
+        :param max_iter: Maximum number of iterations for a single run.
+        :return: A DataFrame with original x, y and cluster labels, and the cluster centers.
         """
         self.startTime = time.time()
         data = self.df.drop(['x', 'y'], axis=1)
@@ -182,7 +172,6 @@ class KMeans:
         """
 
         Saves the imputed DataFrame to a CSV file.
-
         """
         if self.labelsDF is not None:
             try:

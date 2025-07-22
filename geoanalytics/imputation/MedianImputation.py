@@ -127,7 +127,7 @@ class MedianImputation:
         and returns the imputed DataFrame with original coordinates.
 
         Returns:
-        --------
+
         imputedDF : pandas.DataFrame
             The DataFrame with missing values imputed using column medians.
         """

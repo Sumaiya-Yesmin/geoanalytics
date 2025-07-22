@@ -129,12 +129,12 @@ class MatrixFactorizationKNN:
         Executes KNN Imputation on the dataset (excluding 'x' and 'y' columns),and returns the imputed DataFrame with original coordinates.
 
         Parameters:
-        -----------
+
         k : int
             Number of neighbors to use (default: 5)
 
         Returns:
-        --------
+
         imputedDF : pandas.DataFrame
             The DataFrame with missing values imputed.
         """

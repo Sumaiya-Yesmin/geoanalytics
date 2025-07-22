@@ -4,34 +4,34 @@ geoanalytics Modules
 .. toctree::
    :maxdepth: 2
 
-   conversion/conversion
+   conversion
 
 .. toctree::
    :maxdepth: 2
 
-   imputation/imputation
+   imputation
 
 .. toctree::
    :maxdepth: 2
 
-   clustering/clustering
+   clustering
 
 .. toctree::
    :maxdepth: 2
 
-   patternMining/patternMining
+   patternMining
 
 .. toctree::
    :maxdepth: 2
 
-   normalization/normalization
+   normalization
 
 .. toctree::
    :maxdepth: 2
 
-   scoreCalculator/scoreCalculator
+   scoreCalculator
 
 .. toctree::
    :maxdepth: 2
 
-   visualization/visualization
+   visualization
