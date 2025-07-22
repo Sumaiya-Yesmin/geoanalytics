@@ -2,7 +2,7 @@ sphinx
 sphinx_rtd_theme
 
 pandas
-numpy
+numpy==1.26.4
 matplotlib~=3.10.3
 psutil~=7.0.0
 tqdm~=4.67.1
@@ -12,3 +12,4 @@ Deprecated~=1.2.18
 scikit-learn>=1.4.2
 fuzzy-c-means
 hdbscan
+fancyimpute
