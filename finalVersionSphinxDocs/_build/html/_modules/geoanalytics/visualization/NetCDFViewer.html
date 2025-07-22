@@ -70,7 +70,18 @@
            <div itemprop="articleBody">
              
   <h1>Source code for geoanalytics.visualization.NetCDFViewer</h1><div class="highlight"><pre>
-<span></span><span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span></span><span class="c1"># NetCDFViewer Class for Visualizing NetCDF (.nc) Raster Data</span>
+
+<span class="c1"># **Importing and Using the NetCDFViewer Class in a Python Program**</span>
+<span class="c1">#</span>
+<span class="c1">#             from geoanalytics.visualization import NetCDFViewer</span>
+<span class="c1">#</span>
+<span class="c1">#             viewer = NetCDFViewer(&#39;sample.nc&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#             viewer.run(cmap=&#39;plasma&#39;, title=&#39;Sample NetCDF Image&#39;)</span>
+<span class="c1">#</span>
+
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">Copyright (C)  2022 Rage Uday Kiran</span>
 
 <span class="s2">     This program is free software: you can redistribute it and/or modify</span>
@@ -92,11 +103,54 @@
 
 
 <div class="viewcode-block" id="NetCDFViewer"><a class="viewcode-back" href="../../../visualizationNetCDFViewer.html#geoanalytics.visualization.NetCDFViewer.NetCDFViewer">[docs]</a><span class="k">class</span> <span class="nc">NetCDFViewer</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    **About this module**</span>
+
+<span class="sd">    :**Description**:</span>
+<span class="sd">        NetCDFViewer is a raster data visualization tool designed for rendering single-band raster layers</span>
+<span class="sd">        from NetCDF (.nc) files. It leverages `rasterio` for data access and `matplotlib` for rendering.</span>
+<span class="sd">        The class supports customizable colormaps and plot titles, making it suitable for visualizing</span>
+<span class="sd">        meteorological, oceanographic, or climate data.</span>
+
+<span class="sd">    :**Parameters**:</span>
+<span class="sd">        - `inputFile` (str): Path to the input NetCDF (.nc) file.</span>
+
+<span class="sd">    :**Attributes**:</span>
+<span class="sd">        - **inputFile** (*str*) -- The path to the NetCDF file to be visualized.</span>
+<span class="sd">        - **imageData** (*numpy.ndarray*) -- The raster data extracted from the NetCDF file.</span>
+
+<span class="sd">    **Execution methods**</span>
+
+<span class="sd">    **Calling from a Python program**</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">            from geoanalytics.visualization import NetCDFViewer</span>
+
+<span class="sd">            viewer = NetCDFViewer(&quot;sample.nc&quot;)</span>
+
+<span class="sd">            viewer.run(cmap=&#39;plasma&#39;, title=&#39;NetCDF Raster Display&#39;)</span>
+
+
+<span class="sd">    **Credits**</span>
+
+<span class="sd">    This implementation was developed by Raashika and revised by M. Charan Teja under the guidance of Professor Rage Uday Kiran.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputFile</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inputFile</span> <span class="o">=</span> <span class="n">inputFile</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">imageData</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="NetCDFViewer.run"><a class="viewcode-back" href="../../../visualizationNetCDFViewer.html#geoanalytics.visualization.NetCDFViewer.NetCDFViewer.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;NC Image&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads and displays the first raster band from the NetCDF file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            cmap (str): Colormap to use for visualization (default: &#39;gray&#39;).</span>
+<span class="sd">            title (str): Plot title to display (default: &#39;NC Image&#39;).</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If image data is not loaded properly.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputFile</span><span class="p">)</span> <span class="k">as</span> <span class="n">src</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imageData</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">imageData</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

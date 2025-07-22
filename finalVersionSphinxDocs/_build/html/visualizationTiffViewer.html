@@ -92,10 +92,52 @@
 <dt class="sig sig-object py" id="geoanalytics.visualization.TiffViewer.TiffViewer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoanalytics.visualization.TiffViewer.</span></span><span class="sig-name descname"><span class="pre">TiffViewer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputFile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geoanalytics/visualization/TiffViewer.html#TiffViewer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoanalytics.visualization.TiffViewer.TiffViewer" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p><strong>About this module</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">Description<span class="colon">:</span></dt>
+<dd class="field-odd"><p>TiffViewer is a lightweight visualization utility that reads and displays single-band raster
+data from TIFF files using <cite>rasterio</cite> and <cite>matplotlib</cite>. This class is ideal for visualizing
+satellite imagery, elevation maps, and other raster-based spatial data formats.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><cite>inputFile</cite> (str): Path to the input TIFF (.tif) file.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputFile</strong> (<em>str</em>) – The path to the GeoTIFF file to be visualized.</p></li>
+<li><p><strong>imageData</strong> (<em>numpy.ndarray</em>) – The raster data read from the TIFF file.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Execution methods</strong></p>
+<p><strong>Calling from a Python program</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">geoanalytics.visualization</span> <span class="kn">import</span> <span class="n">TiffViewer</span>
+
+<span class="n">viewer</span> <span class="o">=</span> <span class="n">TiffViewer</span><span class="p">(</span><span class="s2">&quot;sample.tif&quot;</span><span class="p">)</span>
+
+<span class="n">viewer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Raster View&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Credits</strong></p>
+<p>This implementation was developed by Raashika and revised by M. Charan Teja under the supervision of Professor Rage Uday Kiran.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="geoanalytics.visualization.TiffViewer.TiffViewer.run">
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gray'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'TIFF</span> <span class="pre">Image'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/geoanalytics/visualization/TiffViewer.html#TiffViewer.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoanalytics.visualization.TiffViewer.TiffViewer.run" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Reads and displays the first band of the given TIFF file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cmap</strong> (<em>str</em>) – Matplotlib colormap for visualization (default: ‘gray’).</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Title to be displayed on the plot (default: ‘TIFF Image’).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If image data could not be loaded.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
