@@ -51,16 +51,7 @@
 geoAnalytics is an open-source Python-based Machine Learning library developed to discover various forms of 
 useful information hidden in the raster data. The algorithms provided in this library cover a wide-spectrum 
 of machine learning tasks, such as imputation, image fusion, clustering, classification, one class 
-classification, and pattern mining. This library being platform independent can run any operating system. 
-Useful links to utilize the services of this library were provided below:
-
-1. [Tutorials](https://github.com/UdayLab/geoanalytics/blob/main/tests/patternMining/frequentPatternMiningTutorial.ipynb)
-
-2. [Datasets](https://github.com/UdayLab/geoanalytics/tree/main/datasets)  
-
-3. [Discussions](https://github.com/UdayLab/geoanalytics/discussions)
-
-4. [Report issues](https://github.com/UdayLab/geoanalytics/issues)
+classification, and pattern mining. This library being platform independent can run any operating system.
 
 ***
 # Flow Chart of Developing Algorithms in geoAnalytics
